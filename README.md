@@ -40,7 +40,7 @@ flowchart TD
 
 ## 📂 Quick Start
 
- * Clone the repository: ``` git clone https://github.com/YourUsername/EcoFleet-Core.git ```
+ * Clone the repository: ``` git clone https://github.com/EgeSul/EcoFleet-Core.git ```
 
  * Install dependencies: ``` pip install fastapi uvicorn pydantic ```
 
