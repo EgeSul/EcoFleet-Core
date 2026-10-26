@@ -1,47 +1,118 @@
-# EcoFleet-Core: Environmental Vehicle Tracking & Fleet Management
+# EcoFleet-Core: Enterprise IoT Fleet Management & Telemetry Engine
 
+![License](https://img.shields.io/badge/License-MIT-yellow.svg)
 ![Python](https://img.shields.io/badge/Python-3.11+-blue.svg)
 ![FastAPI](https://img.shields.io/badge/Framework-FastAPI-009688.svg)
-![Frontend](https://img.shields.io/badge/Map-Leaflet.js-brightgreen.svg)
-![License](https://img.shields.io/badge/License-MIT-yellow.svg)
+![Vue.js](https://img.shields.io/badge/Vue.js-3.x-brightgreen.svg)
+![PostgreSQL](https://img.shields.io/badge/Database-PostgreSQL%20%2B%20PostGIS-336791.svg)
+![Docker](https://img.shields.io/badge/Docker-Compose-blue.svg)
 
-An eco-conscious fleet management and live vehicle tracking architecture developed for Muğla Water and Sewerage Administration (MUSKİ). Engineered to monitor real-time geolocation data, prevent idle fuel consumption, and optimize field operations to reduce the institutional carbon footprint.
+An enterprise-grade, eco-conscious fleet management and real-time vehicle tracking architecture. Engineered to monitor live geolocation telemetry, prevent idle fuel consumption, and optimize field operations via high-performance spatial data processing.
+
+Transitioning from traditional hardware-dependent GPS trackers to a **Bring Your Own Device (BYOD)** model, EcoFleet-Core utilizes drivers' existing mobile devices to stream asynchronous telemetry coordinates directly into a volatile memory pipeline, which is then processed and rendered on a cyberpunk-themed Vue 3 dashboard[cite: 4].
 
 ---
 
+## 🛠️ Tech Stack & Packages Used
+
+### Backend & Telemetry API (Python)
+* **FastAPI**: High-performance asynchronous RESTful framework for IoT data ingestion.
+* **Uvicorn**: Lightning-fast ASGI server.
+* **SQLAlchemy & GeoAlchemy2**: ORM and spatial data mapping.
+* **Pydantic**: Strict data validation and settings management.
+
+### Frontend & Dashboard (Vue 3)
+* **Vue 3 (Composition API)**: Core frontend framework[cite: 4].
+* **Vite**: Next-generation frontend tooling and bundler[cite: 4].
+* **Leaflet.js**: High-performance interactive mapping and routing.
+* **ApexCharts (vue3-apexcharts)**: Interactive and responsive eco-metrics visualization[cite: 4].
+
+### Database & DevOps
+* **PostgreSQL + PostGIS**: Advanced open-source relational database extended for geographic objects.
+* **Docker & Docker Compose**: Multi-container orchestration (`db`, `api`, `ui`)[cite: 4].
+
+---
+
+## 📂 Enterprise Directory Structure
+
+Below is the layout of the solution, exhibiting a clean Separation of Concerns (SoC) across the full-stack environment:
+
+```text
+📂 EcoFleet-Core/
+│
+├── 🐳 docker-compose.yml            # Multi-container orchestration (PostgreSQL, FastAPI, Nginx)
+│
+├── 📂 EcoFleet.API/                 # Python FastAPI Backend Layer
+│   ├── 🐳 Dockerfile                
+│   ├── main.py                      # ASGI Application Bootstrapper & Middleware
+│   ├── 📂 api/                      # REST Endpoints (Track, Vehicles, WorkOrders)
+│   ├── 📂 core/                     # Business Logic & Telemetry Processing
+│   └── 📂 models/                   # SQLAlchemy & Pydantic Data Schemas
+│
+├── 📂 EcoFleet.UI/                  # Enterprise Vue 3 Frontend (Vite)[cite: 4]
+│   ├── 🐳 Dockerfile                # Node.js Build -> Nginx Alpine Serve[cite: 4]
+│   ├── 📂 src/
+│   │   ├── App.vue                  # Main Dashboard & Live Map UI
+│   │   ├── 📂 components/           # Map, WorkOrderModal, FleetList
+│   │   └── main.js                  # Vue Application Initialization
+│   └── vite.config.js               # Vite Proxy Configuration[cite: 4]
+│
+├── 📂 EcoFleet.Client/              # Mobile PWA for Drivers
+│   └── index.html                   # HTML5 Geolocation API Transmitter
+│
+└── 📂 EcoFleet.DB/                  # Database Assets
+    └── init_postgis.sql             # SQL Script for table & spatial initialization
+```
+
 ## 🏗️ System Architecture & Real-Time Data Flow
 
+To maintain a production-grade ecosystem, EcoFleet-Core implements strict modularity.
+
 ```mermaid
-flowchart TD
-    subgraph Mobile Client ["Driver's Phone (Mobile Web / PWA)"]
+graph TD
+    subgraph MobileEdge ["Edge Devices (Drivers' Phones)"]
         GPS[HTML5 Geolocation API]
         Sender[Async Fetch POST]
-        GPS -->|Lat, Lng, VehicleID, Speed| Sender
+        GPS -->|Lat, Lng, Speed, VehicleID| Sender
     end
 
-    subgraph Backend Engine ["Python API (FastAPI)"]
-        Receiver[REST Endpoint: /api/track]
-        Processor[Data Validation & Structuring]
-        Sender -->|JSON Payload every 5s| Receiver
-        Receiver --> Processor
+    subgraph DockerNetwork ["Docker Bridge Network (ecofleet-net)"]
+        subgraph APIContainer ["API Container (FastAPI - Port 8000)"]
+            Engine[Uvicorn ASGI Server]
+            Validator[Pydantic Validation]
+            Logic[Business & Spatial Logic]
+        end
+
+        subgraph DBContainer ["DB Container (Port 5432)"]
+            PG[(PostgreSQL + PostGIS)]
+        end
+
+        subgraph UIContainer ["UI Container (Vue 3 / Nginx - Port 5173)"]
+            Map[Leaflet Live Map]
+            Metrics[ApexCharts Dashboard]
+        end
     end
 
-    subgraph Operations Center ["Dashboard (Leaflet.js)"]
-        Map[Live Map UI]
-        Processor -->|WebSocket / Polling| Map
-    end
+    Sender -->|JSON Payload every 5s| Engine
+    Engine --> Validator
+    Validator --> Logic
+    Logic -->|SQL/Spatial Queries| PG
+    Logic -.->|WebSocket / Polling| Map
+    Logic -.->|WebSocket / Polling| Metrics
 ```
-## 🚀 3-Day MVP Features
 
- * Real-Time Geolocation Tracking: Streams live GPS coordinates from the driver's smartphone directly to the backend.
- * Eco-Metrics & Idle Detection: Baseline architecture designed to monitor unnecessary engine idling and route deviations.
- * Work Order Integration Ready: Modular data structure prepared for upcoming task assignment features.
- * Hardware-Free: Relies entirely on the drivers' existing mobile devices without requiring costly OBD2 GPS trackers.
+## 🗺️ Development Roadmap
 
-## 📂 Quick Start
+    [ ] v1.0.0 - Core telemetry ingestion pipeline and basic Leaflet live mapping.
 
- * Clone the repository: ``` git clone https://github.com/EgeSul/EcoFleet-Core.git ```
+    [ ] v1.5.0 - PostgreSQL + PostGIS integration for persistent spatial history.
 
- * Install dependencies: ``` pip install fastapi uvicorn pydantic ```
+    [ ] v2.0.0 - Work Order generation and dynamic dispatching system.
 
- * Boot the backend engine: ``` uvicorn main:app --reload ```
+    [ ] v2.5.0 - Eco-Metrics AI (Idle detection, route deviation analytics).
+
+    [ ] v3.0.0 - Complete Full-Stack Dockerization (Nginx, Python 3.11, PostgreSQL).
+
+## 📄 License & Architecture
+
+This architecture is completely open-source and released under the MIT License. Designed and engineered for high-performance enterprise fleet telemetry analysis.
