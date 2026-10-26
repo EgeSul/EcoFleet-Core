@@ -9,7 +9,7 @@
 
 An enterprise-grade, eco-conscious fleet management and real-time vehicle tracking architecture. Engineered to monitor live geolocation telemetry, prevent idle fuel consumption, and optimize field operations via high-performance spatial data processing.
 
-Transitioning from traditional hardware-dependent GPS trackers to a **Bring Your Own Device (BYOD)** model, EcoFleet-Core utilizes drivers' existing mobile devices to stream asynchronous telemetry coordinates directly into a volatile memory pipeline, which is then processed and rendered on a cyberpunk-themed Vue 3 dashboard[cite: 4].
+Transitioning from traditional hardware-dependent GPS trackers to a **Bring Your Own Device (BYOD)** model, EcoFleet-Core utilizes drivers' existing mobile devices to stream asynchronous telemetry coordinates directly into a volatile memory pipeline, which is then processed and rendered on a cyberpunk-themed Vue 3 dashboard.
 
 ---
 
@@ -22,14 +22,14 @@ Transitioning from traditional hardware-dependent GPS trackers to a **Bring Your
 * **Pydantic**: Strict data validation and settings management.
 
 ### Frontend & Dashboard (Vue 3)
-* **Vue 3 (Composition API)**: Core frontend framework[cite: 4].
-* **Vite**: Next-generation frontend tooling and bundler[cite: 4].
+* **Vue 3 (Composition API)**: Core frontend framework.
+* **Vite**: Next-generation frontend tooling and bundler.
 * **Leaflet.js**: High-performance interactive mapping and routing.
-* **ApexCharts (vue3-apexcharts)**: Interactive and responsive eco-metrics visualization[cite: 4].
+* **ApexCharts (vue3-apexcharts)**: Interactive and responsive eco-metrics visualization.
 
 ### Database & DevOps
 * **PostgreSQL + PostGIS**: Advanced open-source relational database extended for geographic objects.
-* **Docker & Docker Compose**: Multi-container orchestration (`db`, `api`, `ui`)[cite: 4].
+* **Docker & Docker Compose**: Multi-container orchestration (`db`, `api`, `ui`).
 
 ---
 
